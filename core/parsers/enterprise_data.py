@@ -14,15 +14,18 @@ Version differences this parser handles:
   * 1.20 — newest: same as 1.10 + <ОбщиеСвойстваОбъектовФормата><ДополнительныеРеквизиты>,
             <СтавкаНДС> may be either string ("БезНДС") OR a structured element with <Ставка>.
 
-This is intentionally narrow: covers Справочник.Номенклатура (products) for
-now. Documents (Документ.*) will be added in a follow-up.
+Covers Справочник.* (Номенклатура, Контрагенты, Организации, Склады, Штрихкоды,
+ПозицияПрайсЛиста) and Документ.ПоступлениеТоваровУслуг (приходная накладная →
+doc_accept_invoice + doc_position_accept_invoice, плюс встроенные мастер-сущности).
 """
 
 from __future__ import annotations
 
+import hashlib
 import re
 import uuid
 import xml.etree.ElementTree as ET
+from datetime import datetime, timezone
 from pathlib import Path
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
@@ -325,6 +328,7 @@ def _parse_counterparty(item: ET.Element) -> list[dict]:
         "table": "counterparty",
         "data": {
             "id": cid,
+            "created_at": _now_iso(),
             "name": name,
             "full_name": full_name,
             "type": cp_type,
@@ -429,6 +433,187 @@ def _parse_price_item(item: ET.Element) -> list[dict]:
     return out
 
 
+# ── Документы: helpers ───────────────────────────────────────────────────────
+
+def _now_iso() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
+
+
+def _num(text: str | None):
+    """Parse a 1C numeric ('15', '1,5', '12.0') → int if whole, else float."""
+    if not text:
+        return 0
+    s = str(text).replace(" ", "").replace(" ", "").replace(",", ".")
+    try:
+        f = float(s)
+        return int(f) if f == int(f) else f
+    except ValueError:
+        return 0
+
+
+def _money_to_kop(text: str | None) -> int:
+    """Money in rubles ('100', '126.50', '1 890,00') → integer kopecks."""
+    if not text:
+        return 0
+    s = str(text).replace(" ", "").replace(" ", "").replace(",", ".")
+    try:
+        return int(round(float(s) * 100))
+    except ValueError:
+        return 0
+
+
+def _embedded_nomenclature(nom_elem, line_unit: str, line_tax: str,
+                           out: list[dict], seen_products: set) -> str | None:
+    """
+    Номенклатура embedded inside a document line has its fields as DIRECT
+    children (Ссылка/Наименование/КодВПрограмме/Группа) — no <КлючевыеСвойства>.
+    Emit catalog_group + catalog_product + catalog_variant (+ article) once per id.
+    Returns the variant_id (== product ref) for the line to reference.
+    """
+    if nom_elem is None:
+        return None
+    ref = _text(_find(nom_elem, "Ссылка", "Ref"))
+    if not ref:
+        return None
+    if ref in seen_products:
+        return ref
+    seen_products.add(ref)
+
+    name = _text(_find(nom_elem, "Наименование", "Name")) \
+        or _text(_find(nom_elem, "НаименованиеПолное", "FullName")) \
+        or "Без названия"
+    full = _text(_find(nom_elem, "НаименованиеПолное", "FullName"))
+    code = _text(_find(nom_elem, "КодВПрограмме", "ProgramCode")) \
+        or _text(_find(nom_elem, "Артикул", "Article"))
+
+    group_elem = _find(nom_elem, "Группа", "Group")
+    group_id = _walk_groups(group_elem, None, out) if group_elem is not None else None
+    if not group_id:
+        group_id = "00000000-0000-0000-0000-000000000000"
+        out.append({"table": "catalog_group",
+                    "data": {"id": group_id, "parent_id": None, "name": "Без категории"}})
+
+    out.append({"table": "catalog_product", "data": {
+        "id": ref, "name": name, "type": "default", "tax_rate": line_tax,
+        "group_id": group_id, "unit": line_unit,
+        "description": full if (full and full != name) else None,
+    }})
+    out.append({"table": "catalog_variant",
+                "data": {"id": ref, "product_id": ref, "display_name": name}})
+    if code:
+        out.append({"table": "variant_article", "data": {"variant_id": ref, "article": code}})
+    return ref
+
+
+# ── Документ.ПоступлениеТоваровУслуг (приходная накладная) ────────────────────
+
+def _parse_goods_receipt(doc: ET.Element, version: str) -> list[dict]:
+    out: list[dict] = []
+    key = _find(doc, "КлючевыеСвойства", "KeyProperties")
+
+    doc_id = (_text(_find(key, "Ссылка", "Ref")) if key is not None else None) \
+        or _text(_find(doc, "Ссылка", "Ref"))
+    if not doc_id:
+        return out
+    date = (_text(_find(key, "Дата", "Date")) if key is not None else None) or _now_iso()
+    number = (_text(_find(key, "Номер", "Number")) if key is not None else None) or "б/н"
+
+    # Организация → legal_entity
+    org = _find(key, "Организация", "Organization") if key is not None else None
+    org_id = _text(_find(org, "Ссылка", "Ref")) if org is not None else None
+    if org_id:
+        out.append({"table": "legal_entity", "data": {
+            "id": org_id,
+            "name": _text(_find(org, "Наименование", "Name")) or "Организация",
+            "inn": _text(_find(org, "ИНН", "INN")) or "",
+            "kpp": _text(_find(org, "КПП", "KPP")) or "",
+            "address": "", "fsrar_id": "",
+        }})
+
+    # Контрагент → counterparty (поставщик)
+    cp = _find(key, "Контрагент", "Counterparty") if key is not None else None
+    cp_id = _text(_find(cp, "Ссылка", "Ref")) if cp is not None else None
+    if cp_id:
+        yf = _text(_find(cp, "ЮридическоеФизическоеЛицо", "LegalOrIndividual")) or ""
+        cp_type = "individual" if "Физическое" in yf else "legal_entity"
+        cp_name = _text(_find(cp, "Наименование", "Name")) or "Поставщик"
+        out.append({"table": "counterparty", "data": {
+            "id": cp_id, "created_at": date, "name": cp_name, "full_name": cp_name,
+            "type": cp_type, "inn": _text(_find(cp, "ИНН", "INN")) or "",
+            "kpp": _text(_find(cp, "КПП", "KPP")),
+            "is_supplier": 1, "is_customer": 0, "fsrar_id": "",
+        }})
+
+    # Склад → warehouse (+ synthetic shop to satisfy NOT NULL store_id)
+    wh = _find(doc, "Склад", "Warehouse")
+    wh_id = _text(_find(wh, "Ссылка", "Ref")) if wh is not None else None
+    wh_name = (_text(_find(wh, "Наименование", "Name")) if wh is not None else None) or "Склад"
+    shop_id = None
+    if org_id:
+        shop_id = str(uuid.uuid5(uuid.NAMESPACE_URL, "shop:" + org_id))
+        out.append({"table": "shop", "data": {
+            "id": shop_id, "name": wh_name, "address": "", "legal_entity_id": org_id,
+        }})
+    if wh_id:
+        out.append({"table": "warehouse",
+                    "data": {"id": wh_id, "name": wh_name, "shop_id": shop_id or ""}})
+
+    # Строки товаров → doc_position_accept_invoice (+ embedded nomenclature)
+    goods = _find(doc, "Товары", "Goods", "Products")
+    lines = _findall(goods, "Строка", "Line", "Row") if goods is not None else []
+    seen_products: set = set()
+    total_kop, pos_count = 0, 0
+    for i, line in enumerate(lines, start=1):
+        nom_data = _find(line, "ДанныеНоменклатуры", "NomenclatureData")
+        nom = _find(nom_data, "Номенклатура", "Nomenclature") if nom_data is not None \
+            else _find(line, "Номенклатура", "Nomenclature")
+        unit = _parse_unit(_find(line, "ЕдиницаИзмерения", "UnitOfMeasure"))
+        tax = _parse_nds(_find(line, "СтавкаНДС", "VATRate"))
+        variant_id = _embedded_nomenclature(nom, unit, tax, out, seen_products)
+        if not variant_id:
+            continue
+        qty = _num(_text(_find(line, "Количество", "Quantity")))
+        price_kop = _money_to_kop(_text(_find(line, "Цена", "Price")))
+        sum_kop = _money_to_kop(_text(_find(line, "Сумма", "Sum", "Amount")))
+        if not sum_kop and price_kop and qty:
+            sum_kop = int(round(price_kop * qty))
+        total_kop += sum_kop
+        pos_count += 1
+        # deterministic id → re-ingesting the same file is idempotent (OR IGNORE)
+        pos_id = int(hashlib.sha1(f"{doc_id}|{i}".encode()).hexdigest()[:15], 16)
+        out.append({"table": "doc_position_accept_invoice", "data": {
+            "id": pos_id, "document_id": doc_id, "variant_id": variant_id,
+            "name": _text(_find(nom, "Наименование", "Name")) if nom is not None else None,
+            "quantity": qty, "unit_cost_with_tax": price_kop,
+            "total_cost_with_tax": sum_kop, "tax": tax, "measure": unit,
+            "article": _text(_find(nom, "КодВПрограмме", "ProgramCode")) if nom is not None else None,
+        }})
+
+    # Header total — prefer the document-level <Сумма>
+    doc_sum = _money_to_kop(_text(_find(doc, "Сумма", "Sum", "Amount")))
+    if doc_sum:
+        total_kop = doc_sum
+
+    # Incoming document reference → comment
+    incoming = _find(key, "ДанныеВходящегоДокумента", "IncomingDocumentData") if key is not None else None
+    comment = None
+    if incoming is not None:
+        in_num = _text(_find(incoming, "НомерВходящегоДокумента", "IncomingNumber"))
+        in_date = _text(_find(incoming, "ДатаВходящегоДокумента", "IncomingDate"))
+        if in_num or in_date:
+            comment = f"Вх. №{in_num or '?'} от {in_date or '?'}"
+
+    out.append({"table": "doc_accept_invoice", "data": {
+        "id": doc_id, "num": number, "created_at": date, "accepted_at": date,
+        "warehouse_id": wh_id or "", "store_id": shop_id or "",
+        "legal_entity_id": org_id or "", "contractor_id": cp_id or "",
+        "source": "EDO", "status": "ACCEPTED",
+        "positions_count": pos_count, "total_cost_with_tax": total_kop,
+        "comment": comment, "move_stock": 0,
+    }})
+    return out
+
+
 # ── Top-level entity dispatcher ──────────────────────────────────────────────
 
 _ENTITY_HANDLERS: dict[str, callable] = {
@@ -442,6 +627,10 @@ _ENTITY_HANDLERS: dict[str, callable] = {
     "Catalog.Warehouses":                  lambda el, v: _parse_warehouse(el),
     "Справочник.ШтрихкодыНоменклатуры":    lambda el, v: _parse_barcode_ref(el),
     "Справочник.ПозицияПрайсЛиста":        lambda el, v: _parse_price_item(el),
+    # Документы
+    "Документ.ПоступлениеТоваровУслуг":    lambda el, v: _parse_goods_receipt(el, v),
+    "Документ.ПриобретениеТоваровУслуг":   lambda el, v: _parse_goods_receipt(el, v),
+    "Document.GoodsReceipt":               lambda el, v: _parse_goods_receipt(el, v),
 }
 
 
@@ -478,7 +667,7 @@ def parse_bytes(raw: bytes) -> list[dict]:
     seen: dict[str, set[str]] = {}
     for rec in records:
         table = rec["table"]
-        if table in ("catalog_group", "counterparty", "legal_entity", "warehouse"):
+        if table in ("catalog_group", "counterparty", "legal_entity", "warehouse", "shop"):
             ident = rec["data"].get("id")
             if not ident:
                 deduped.append(rec)
