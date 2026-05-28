@@ -1,0 +1,22 @@
+[Unit]
+Description=LLM ETL — web viewer (Datasette + status page)
+After=network.target llm-etl-api.service
+PartOf=llm-etl.target
+
+[Service]
+Type=simple
+User=llm-etl
+Group=llm-etl
+WorkingDirectory=/opt/llm-etl
+Environment=LLM_ETL_ROOT=/opt/llm-etl
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/llm-etl/.venv/bin/python -m uvicorn target_host.viewer.app:app \
+    --host 0.0.0.0 --port 8081 --workers 1
+Restart=on-failure
+RestartSec=5s
+
+MemoryMax=200M
+MemorySwapMax=0
+
+[Install]
+WantedBy=multi-user.target

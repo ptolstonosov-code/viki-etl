@@ -1,0 +1,56 @@
+# ── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ── Virtual environments ─────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── Models & weights (too big for GitHub; >100MB limit) ──────────────────────
+*.gguf
+*.bin
+*.safetensors
+*.pt
+*.pth
+models/
+
+# ── Build / distribution artifacts ───────────────────────────────────────────
+dist/
+build/
+*.tar.gz
+*.zip
+wheels/
+wheels_fix/
+
+# ── Databases & data ─────────────────────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+data/
+!data/.gitkeep
+
+# ── Local samples / quarantine ───────────────────────────────────────────────
+parsers/learned/
+parsers/shadow/
+samples/
+
+# ── Temp / scratch ───────────────────────────────────────────────────────────
+.tmp_b64.txt
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+
+# ── Real customer 1C exports (contain real INN / catalog — never publish) ─────
+# Keeps the public 1C spec (*.html, *.xsd) but excludes real data dumps.
+examples/real_1c/*.xml
+
+# ── Secrets ──────────────────────────────────────────────────────────────────
+.env
+*.key
+*.pem
+credentials*.json

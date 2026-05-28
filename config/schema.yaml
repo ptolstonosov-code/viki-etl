@@ -1,0 +1,58 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Database & schema config
+# Schema definition itself lives in config/schema.sql (source of truth).
+# ─────────────────────────────────────────────────────────────────────────────
+
+database:
+  driver: "sqlite"                       # sqlite | postgresql | mysql
+  url: "sqlite:///data/etl.db"           # SQLAlchemy URL
+  schema_file: "config/schema.sql"       # CREATE TABLE statements
+  init_on_startup: true                  # auto-run schema.sql if DB is empty
+
+# ── Conflict / upsert strategy when LLM produces duplicate rows ──────────────
+default_conflict_strategy: "ignore"      # insert | ignore | update
+
+conflict_strategy:
+  # Master data — overwrite on conflict
+  catalog_group: "update"
+  catalog_group_attribute: "update"
+  catalog_product: "update"
+  catalog_variant: "update"
+  legal_entity: "update"
+  shop: "update"
+  warehouse: "update"
+  counterparty: "update"
+  # Variant attributes
+  variant_price: "update"
+  variant_barcode: "update"
+  variant_article: "update"
+  variant_marked_meta: "update"
+  variant_alcohol_meta: "update"
+  # Documents — skip duplicates by primary key (id)
+  doc_accept_invoice: "ignore"
+  doc_receipt: "ignore"
+  doc_shift: "ignore"
+  doc_stock: "ignore"
+  doc_transfer: "ignore"
+  doc_inventory: "ignore"
+
+# ── Hints for the LLM ────────────────────────────────────────────────────────
+# These hints are appended to the system prompt to help the LLM with ambiguous fields.
+parsing_hints: |
+  Domain-specific conventions you MUST follow:
+  - All monetary amounts (price, cost, sum, amount) are stored in KOPEKS (integer × 100). Multiply rubles by 100.
+  - Quantities in doc_position_receipt use multiplier ×1000 (integer kg/pcs × 1000).
+  - All dates: ISO 8601 — YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS.
+  - Booleans: 0 (false) / 1 (true), not "true"/"false" strings.
+  - IDs are UUIDs (text). If input lacks an id, generate one OR set it to null and let the system fill it.
+  - "ИНН"/"INN" → counterparty.inn or legal_entity.inn (10 digits = ЮЛ, 12 digits = ИП).
+  - "ФСРАР"/"FSRAR" → legal_entity.fsrar_id (12 digits, ЕГАИС).
+  - Russian unit codes (ОКЕИ): pieces=796, kg=166, l=112, m=006, set=657.
+  - Tax rates (НДС): no tax = NDS_NO_TAX, 5% = NDS_5, 7% = NDS_7, 10% = NDS_10, 22% = NDS_22.
+  - For EGAIS (УТМ) XML, source = 'EGAIS'. For 1С/Diadoc UPD, source = 'EDO'. Manual input = 'MANUL'.
+  - When extracting a receipt (чек): create doc_receipt + doc_position_receipt rows. Same for invoices.
+
+# ── Tables to populate ──────────────────────────────────────────────────────
+# If empty → all tables in schema.sql are valid targets.
+# Set this to restrict the LLM to only specific tables.
+allowed_tables: []

@@ -1,0 +1,29 @@
+[Unit]
+Description=LLM ETL — on-demand LLM inference server (llama.cpp)
+After=network.target
+PartOf=llm-etl.target
+# This unit is started by the API on demand, never on boot
+
+[Service]
+Type=simple
+User=llm-etl
+Group=llm-etl
+WorkingDirectory=/opt/llm-etl
+ExecStart=/opt/llm-etl/llama-server \
+    --model /opt/llm-etl/models/active.gguf \
+    --port 8180 \
+    --host 127.0.0.1 \
+    --ctx-size 16384 \
+    --threads 4 \
+    --batch-size 256 \
+    --no-mmap \
+    --n-gpu-layers 0
+Restart=no
+
+# Memory guard — kill if it overflows
+MemoryMax=2200M
+MemorySwapMax=0
+
+# Don't start at boot (started on demand by API)
+[Install]
+# NOT WantedBy=multi-user.target — intentional

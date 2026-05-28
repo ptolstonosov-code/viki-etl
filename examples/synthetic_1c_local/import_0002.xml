@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CommercialInformation SchemaVersion="2.05" CreationDate="2026-05-14T16:43:20">
+  <Classifier>
+    <Id>fc91705a-a7d6-46c6-8fba-ea2f1597ae30</Id>
+    <Name>Основной классификатор</Name>
+    <Groups>
+      <Group>
+        <Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id>
+        <Name>Молочная продукция</Name>
+      </Group>
+      <Group>
+        <Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id>
+        <Name>Безалкогольные напитки</Name>
+      </Group>
+      <Group>
+        <Id>e5997d09-4b42-4034-b155-84d20101b605</Id>
+        <Name>Алкогольная продукция</Name>
+      </Group>
+    </Groups>
+  </Classifier>
+  <Catalog СодержитТолькоИзменения="false">
+    <Id>62fc988f-8bc9-4024-bde5-23a8e3acb1bf</Id>
+    <Name>Каталог товаров</Name>
+    <Products>
+      <Product>
+        <Id>5ce4df51-e3a1-4433-924e-723ac96c0330</Id>
+        <Article>ART-668177</Article>
+        <Name>Молоко 3.2% 0.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>8373540331739</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>66bcda3f-1af7-4147-8fc2-35ed11348ccf</Id>
+        <Article>ART-735325</Article>
+        <Name>Сок мультифрукт 0.95л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>7717535560932</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>16afa955-50f0-4dd0-8696-95997bdbc115</Id>
+        <Article>ART-212525</Article>
+        <Name>Кофе Tchibo растворимый 190г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>5477725228722</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>ed161c13-b4fc-4dd5-a3b7-7c93792f37db</Id>
+        <Article>ART-967482</Article>
+        <Name>Сливочное масло 180г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>2038750997705</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>8ac183eb-2b8a-4e87-8217-f1cb4b519bdf</Id>
+        <Article>ART-908689</Article>
+        <Name>Молоко 3.2% 0.9л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>1182339845466</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+        <Description>Качественный молочная продукция</Description>
+      </Product>
+      <Product>
+        <Id>55f8c2d5-25aa-4552-a8f7-34d97be2dc21</Id>
+        <Article>ART-280960</Article>
+        <Name>Кофе Jacobs растворимый 95г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>6668700217650</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>d7f4868f-2b05-44da-994b-1ce959d8d2b5</Id>
+        <Article>ART-296256</Article>
+        <Name>Кефир 1% 0.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>2503926142932</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+        <Description>Производство РФ</Description>
+      </Product>
+      <Product>
+        <Id>8c4c889f-b0a2-46a6-81bc-cffb3c4951a6</Id>
+        <Article>ART-197590</Article>
+        <Name>Пиво Жигулёвское 1.35л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>6315999650476</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+        <Description>Производство РФ</Description>
+      </Product>
+      <Product>
+        <Id>88c0ebdd-d073-46fd-b03c-d795c3e60b9f</Id>
+        <Article>ART-114540</Article>
+        <Name>Кола Pepsi 0.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>5819956046612</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>7ac8191d-c1f3-4736-bde0-941d22d0dfe0</Id>
+        <Article>ART-221122</Article>
+        <Name>Вино белое Каберне 0.75л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>1543799371245</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>c7dfc92e-406b-4e67-afcf-ad23e7a0a739</Id>
+        <Article>ART-383155</Article>
+        <Name>Кофе Jacobs растворимый 190г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>8280737416721</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>abd1e67a-2e1c-48bf-b18f-2c0d01710460</Id>
+        <Article>ART-709445</Article>
+        <Name>Сок мультифрукт 0.95л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>6805891135299</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>88eef95a-e2a5-43d6-a1dd-7e6fcf2eaee1</Id>
+        <Article>ART-102756</Article>
+        <Name>Коньяк Лезгинка 0.25л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>3756798250710</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+        <Description>Качественный алкогольная продукция</Description>
+      </Product>
+      <Product>
+        <Id>769c41af-48fc-4c87-b9b8-eba8ebb6ab78</Id>
+        <Article>ART-534476</Article>
+        <Name>Вино красное Мерло 0.75л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>2660937966039</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>5933d5b1-254b-486f-9fc4-813ad24beb51</Id>
+        <Article>ART-726011</Article>
+        <Name>Сливочное масло 250г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>4125286692964</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>67f230cd-70d6-451b-a0c6-d4c705e44227</Id>
+        <Article>ART-134030</Article>
+        <Name>Вино красное Шардоне 1л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>2368876767723</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>356d499f-2f67-4a1b-9a3c-26217351e661</Id>
+        <Article>ART-187294</Article>
+        <Name>Кофе Jacobs растворимый 190г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>5171339596290</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>5011053b-3e34-48c5-8eb5-9e6425a842db</Id>
+        <Article>ART-555192</Article>
+        <Name>Сливочное масло 180г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>9481260422329</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+        <Description>Качественный молочная продукция</Description>
+      </Product>
+      <Product>
+        <Id>5d28aeb9-1b20-430e-aa8a-b589123475d6</Id>
+        <Article>ART-524468</Article>
+        <Name>Коньяк Лезгинка 0.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>1684577590172</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+        <Description>Качественный алкогольная продукция</Description>
+      </Product>
+      <Product>
+        <Id>85c51e7c-dda0-4cd4-91b8-239104b0229b</Id>
+        <Article>ART-949983</Article>
+        <Name>Йогурт питьевой вишня 330г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>4154152064369</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>12e76b3f-09f3-4cb6-a4dd-c5431248296b</Id>
+        <Article>ART-126068</Article>
+        <Name>Кефир 2.5% 1л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>6271361115540</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+        <Description>Производство РФ</Description>
+      </Product>
+      <Product>
+        <Id>30373322-8065-4c8e-b5c4-05c036116e07</Id>
+        <Article>ART-056132</Article>
+        <Name>Сметана 25% 200г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>2697311219658</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+        <Description>Качественный молочная продукция</Description>
+      </Product>
+      <Product>
+        <Id>9d8d9c06-32f3-456a-83c4-76a3e9dd4615</Id>
+        <Article>ART-566768</Article>
+        <Name>Творог 0% 180г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>4389836403763</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>864598ab-f860-46c2-8bdb-9f1da0896fdc</Id>
+        <Article>ART-918536</Article>
+        <Name>Водка Столичная 0.7л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>7109104300689</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+        <Description>Качественный алкогольная продукция</Description>
+      </Product>
+      <Product>
+        <Id>db40e724-2ed8-42db-9352-92d22329409c</Id>
+        <Article>ART-004463</Article>
+        <Name>Коньяк Арарат 0.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>2102027588429</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+        <Description>Качественный алкогольная продукция</Description>
+      </Product>
+      <Product>
+        <Id>7e8af73f-b40a-4cbd-850c-84ffb2eece0b</Id>
+        <Article>ART-250824</Article>
+        <Name>Сыр Российский 200г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>6220863536544</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>f9b94e7b-d722-44b6-81d2-deb52f045960</Id>
+        <Article>ART-899042</Article>
+        <Name>Водка Беленькая 0.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>4518705349493</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>ff9f1f43-9c0b-4eca-a61b-1cdf4b27f4d0</Id>
+        <Article>ART-524097</Article>
+        <Name>Пиво Балтика №7 0.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>1038657191825</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+        <Description>Производство РФ</Description>
+      </Product>
+      <Product>
+        <Id>d3839fe7-c6df-47fb-b793-b2d7abcd656d</Id>
+        <Article>ART-592321</Article>
+        <Name>Кола Pepsi 0.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>2490352135686</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+        <Description>Качественный безалкогольные напитки</Description>
+      </Product>
+      <Product>
+        <Id>67e1bc44-3a7c-4853-811c-ae2086bbfa65</Id>
+        <Article>ART-855017</Article>
+        <Name>Сок яблочный 0.95л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>1003236519949</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>58a08c61-e886-4f67-91c3-637e7ddbf1fd</Id>
+        <Article>ART-808819</Article>
+        <Name>Кефир 3.2% 0.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>0296670662536</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+        <Description>Качественный молочная продукция</Description>
+      </Product>
+      <Product>
+        <Id>cddbeb9a-b694-467f-8b62-c67f5a733c4a</Id>
+        <Article>ART-313287</Article>
+        <Name>Коньяк Лезгинка 0.25л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>0785932133483</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>2417510f-907d-4338-b321-07fc4fb8b376</Id>
+        <Article>ART-402250</Article>
+        <Name>Кофе Nescafe растворимый 95г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>9325250029214</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>f25621d5-6709-4f23-8084-bd10e4e39492</Id>
+        <Article>ART-131197</Article>
+        <Name>Чай Akbar пакетированный</Name>
+        <BaseUnit Код="796" НаименованиеПолное="Шт">шт</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>7528953926442</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>5e8c9ee7-dca8-4803-a0d3-87949798353d</Id>
+        <Article>ART-069925</Article>
+        <Name>Водка Парламент 1л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>7251355215707</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+        <Description>Качественный алкогольная продукция</Description>
+      </Product>
+      <Product>
+        <Id>851b580f-e0fd-464f-b32d-5bcb47a38a64</Id>
+        <Article>ART-021381</Article>
+        <Name>Вода питьевая Аква Минерале 0.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>1815997062967</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>03ef581e-5127-4e53-947d-f2d97af13fd8</Id>
+        <Article>ART-459562</Article>
+        <Name>Творог 5% 180г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>1069872050611</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>05881db0-6afa-43ad-b386-86c40bd40a46</Id>
+        <Article>ART-694174</Article>
+        <Name>Молоко 2.5% 1л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>4186256527044</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+        <Description>Производство РФ</Description>
+      </Product>
+      <Product>
+        <Id>fb0183d5-02d0-487d-9a79-f91190de29e1</Id>
+        <Article>ART-986617</Article>
+        <Name>Вода питьевая Архыз 5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>2233206163295</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+        <Description>Качественный безалкогольные напитки</Description>
+      </Product>
+      <Product>
+        <Id>75da8f3c-c9e7-4857-9739-e75ee31cc5e6</Id>
+        <Article>ART-558590</Article>
+        <Name>Водка Столичная 0.7л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>9986162299913</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>0569d886-8abe-479a-8cd9-2449d192b22d</Id>
+        <Article>ART-083246</Article>
+        <Name>Коньяк Лезгинка 0.25л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>1324754691376</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>64562d2d-f01f-4cf0-a1a5-a05811554d21</Id>
+        <Article>ART-343962</Article>
+        <Name>Творог 5% 200г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>7972798552418</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>0c44fb20-c2cc-40a1-a5c1-2958681a90a2</Id>
+        <Article>ART-722226</Article>
+        <Name>Сливочное масло 250г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>8007229034948</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+        <Description>Качественный молочная продукция</Description>
+      </Product>
+      <Product>
+        <Id>4b393f43-3b1d-40e6-907b-542a481e1a20</Id>
+        <Article>ART-235650</Article>
+        <Name>Кола Pepsi 1.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>5899441715452</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+        <Description>Качественный безалкогольные напитки</Description>
+      </Product>
+      <Product>
+        <Id>795c1d21-1f59-49ba-99c3-ffb8706eb5fb</Id>
+        <Article>ART-520884</Article>
+        <Name>Пиво Балтика №7 0.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>5207446660996</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>af956af1-62be-4441-a443-b419a8d9e2fc</Id>
+        <Article>ART-284835</Article>
+        <Name>Вода питьевая Аква Минерале 0.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>7170999173818</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>5144ea9b-f4e0-47af-9c0a-6a1941b16307</Id>
+        <Article>ART-819398</Article>
+        <Name>Чай Greenfield пакетированный</Name>
+        <BaseUnit Код="796" НаименованиеПолное="Шт">шт</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>7252175250077</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>3f1d15df-95c7-4dd2-864d-9b1775880374</Id>
+        <Article>ART-470664</Article>
+        <Name>Сыр Российский 200г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>7600835058301</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>ad043e2a-edc0-415e-beb3-e9bd4a3da091</Id>
+        <Article>ART-315300</Article>
+        <Name>Кефир 3.2% 0.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>4789856257535</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+        <Description>Производство РФ</Description>
+      </Product>
+      <Product>
+        <Id>30c4bda1-6eaa-433d-bc3c-999f7e292fd6</Id>
+        <Article>ART-416636</Article>
+        <Name>Сыр Российский 250г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>8499261891410</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+        <Description>Производство РФ</Description>
+      </Product>
+      <Product>
+        <Id>51f81c1f-591e-45fd-aaf8-6c09282f4bfb</Id>
+        <Article>ART-292401</Article>
+        <Name>Водка Талка 1л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>0455611002255</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+        <Description>Качественный алкогольная продукция</Description>
+      </Product>
+      <Product>
+        <Id>4ba6d4f5-9b1f-478a-9d42-0e3e68ca0fba</Id>
+        <Article>ART-454676</Article>
+        <Name>Молоко 4% 0.9л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>2771670145084</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>72c2e8c6-60ea-46dd-991a-3969101837e9</Id>
+        <Article>ART-474661</Article>
+        <Name>Сметана 20% 200г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>8900287721754</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>10</Rate></TaxRate></TaxRates>
+        <Description>Качественный молочная продукция</Description>
+      </Product>
+      <Product>
+        <Id>272b1552-05a8-46e8-8edd-abdae86315d6</Id>
+        <Article>ART-538045</Article>
+        <Name>Сыр Российский 200г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>1775170166083</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>ccdcd99c-f11d-4c82-9ef9-09c73b9c9310</Id>
+        <Article>ART-269302</Article>
+        <Name>Пиво Очаково 1.35л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>7589975711300</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+        <Description>Качественный алкогольная продукция</Description>
+      </Product>
+      <Product>
+        <Id>8682fad0-d99c-4368-998e-bb6648d3a031</Id>
+        <Article>ART-985746</Article>
+        <Name>Вода питьевая БонАква 1.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>8270808697821</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>9b497c1d-8ee4-470f-b6b4-4bc68ae043d4</Id>
+        <Article>ART-539972</Article>
+        <Name>Йогурт питьевой малина 200г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>5472269848580</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>56f194c5-9ccd-42c9-9e6f-2041212637c6</Id>
+        <Article>ART-016171</Article>
+        <Name>Вода питьевая Архыз 1.5л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>4420438057197</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>422e0f22-273e-4218-9192-1a8e10ae88b0</Id>
+        <Article>ART-269399</Article>
+        <Name>Сок мультифрукт 2л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>5800439735987</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+      <Product>
+        <Id>dc36af03-9453-4ab0-8747-5a5a74057421</Id>
+        <Article>ART-909710</Article>
+        <Name>Чай Greenfield пакетированный</Name>
+        <BaseUnit Код="796" НаименованиеПолное="Шт">шт</BaseUnit>
+        <Groups><Id>f6ebe253-83c9-4511-94ea-2274e7263898</Id></Groups>
+        <Barcode>4842294057201</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+        <Description>Качественный безалкогольные напитки</Description>
+      </Product>
+      <Product>
+        <Id>28012ee2-a997-4118-9dd6-59fdc37e8faa</Id>
+        <Article>ART-750759</Article>
+        <Name>Водка Талка 0.7л</Name>
+        <BaseUnit Код="112" НаименованиеПолное="Л">л</BaseUnit>
+        <Groups><Id>e5997d09-4b42-4034-b155-84d20101b605</Id></Groups>
+        <Barcode>8182688615331</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+        <Description>Качественный алкогольная продукция</Description>
+      </Product>
+      <Product>
+        <Id>b7c4d307-0a23-4d64-8385-32b0bcdb248a</Id>
+        <Article>ART-057554</Article>
+        <Name>Йогурт питьевой вишня 200г</Name>
+        <BaseUnit Код="166" НаименованиеПолное="Кг">кг</BaseUnit>
+        <Groups><Id>ab98b5ce-4aef-47ff-b60d-d9ba0e24f35e</Id></Groups>
+        <Barcode>4358112880130</Barcode>
+        <TaxRates><TaxRate><Name>НДС</Name><Rate>20</Rate></TaxRate></TaxRates>
+      </Product>
+    </Products>
+  </Catalog>
+</CommercialInformation>

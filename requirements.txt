@@ -1,0 +1,25 @@
+# Inference (Ollama API client)
+ollama>=0.4.0
+
+# Fine-tuning (HuggingFace stack)
+transformers>=4.46.0
+peft>=0.13.0
+trl>=0.12.0
+datasets>=3.0.0
+accelerate>=1.0.0
+bitsandbytes>=0.44.0   # QLoRA 4-bit quantization (Windows OK since 0.43)
+
+# NOTE: Install PyTorch with CUDA separately:
+# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+# (setup/install_ollama.ps1 does this automatically)
+
+# Database (SQLite is built-in to Python; SQLAlchemy for ORM)
+sqlalchemy>=2.0.0
+
+# Web UI
+gradio>=5.0.0
+
+# Config & CLI
+pyyaml>=6.0.2
+click>=8.1.7
+rich>=13.9.0

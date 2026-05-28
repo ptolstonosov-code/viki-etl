@@ -1,0 +1,10 @@
+# Minimum dependencies for the LOCAL (inference) host.
+# Skips PyTorch / transformers — those are only needed on the GPU training host
+# (see requirements.txt for full set).
+
+ollama>=0.4.0
+sqlalchemy>=2.0.0
+gradio>=5.0.0
+pyyaml>=6.0.2
+click>=8.1.7
+rich>=13.9.0

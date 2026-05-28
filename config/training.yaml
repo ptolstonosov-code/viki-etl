@@ -1,0 +1,91 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Fine-tuning configuration — Qwen2.5-Coder-1.5B-Instruct on RTX 5090
+# 1.5B is small enough that we DON'T need QLoRA: full bf16 LoRA fits easily.
+# Full fine-tune (no LoRA) is also doable on 5090 if you want maximum quality.
+# ─────────────────────────────────────────────────────────────────────────────
+
+dataset:
+  examples_dir: "examples/training_data"
+  validation_split: 0.1
+  max_seq_length: 2048
+  packing: false
+
+# ── LoRA adapter ──────────────────────────────────────────────────────────────
+# Even on a 1.5B model, LoRA is preferred for continual learning: each new
+# round produces a small (~30 MB) adapter you can mix and replay.
+lora:
+  r: 32
+  lora_alpha: 64
+  lora_dropout: 0.05
+  bias: "none"
+  # Qwen2.5 uses the same module names as Llama
+  target_modules:
+    - "q_proj"
+    - "k_proj"
+    - "v_proj"
+    - "o_proj"
+    - "gate_proj"
+    - "up_proj"
+    - "down_proj"
+
+# ── Quantization (QLoRA) ──────────────────────────────────────────────────────
+# 1.5B fits in bf16 on a 5090 without 4-bit. Keep this disabled for speed.
+quantization:
+  enabled: false
+  load_in_4bit: false
+  bnb_4bit_quant_type: "nf4"
+  bnb_4bit_use_double_quant: true
+  bnb_4bit_compute_dtype: "bfloat16"
+
+# ── Training hyperparameters ──────────────────────────────────────────────────
+training:
+  output_dir: "models/etl_lora_adapter"
+  # 2 epochs is a sweet spot for mixed real+synthetic dataset of ~5000 examples.
+  # 3 was needed for tiny seed runs; on real data more risks overfit.
+  num_train_epochs: 2
+  # 1.5B + 5090: theoretical headroom, but Qwen2.5 has vocab=151K which makes
+  # the logits tensor huge — batch>2 with seq_len=2048 → OOM on 32 GB VRAM.
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1       # eval default is 8 → OOM; force 1
+  eval_accumulation_steps: 4          # accumulate eval logits to CPU every 4 steps
+  gradient_accumulation_steps: 16     # effective batch = 16
+  learning_rate: 2.0e-4
+  lr_scheduler_type: "cosine"
+  warmup_ratio: 0.05
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  logging_steps: 10
+  save_steps: 100
+  eval_steps: 100
+  save_total_limit: 3
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_loss"
+  # bf16 is native on Blackwell (5090)
+  bf16: true
+  fp16: false
+  # No bitsandbytes optimizer needed without quantization
+  optim: "adamw_torch_fused"
+  max_seq_length: 2048
+
+# ── After training ────────────────────────────────────────────────────────────
+post_training:
+  merge_adapter: false
+  merged_output_dir: "models/etl_merged"
+  export_to_ollama: false
+  ollama_model_name: "etl-parser"
+
+# ── Continual learning ────────────────────────────────────────────────────────
+# Used by `python -m training.continual run`.
+# Workflow: drop new JSONL into examples/training_data/new/, then run the command.
+# The script: validates → mixes in `replay_ratio` of OLD examples → fine-tunes
+# a NEW versioned adapter (etl_v1, etl_v2…) → only promotes it if its holdout
+# F1 ≥ current production F1.
+continual:
+  new_examples_dir: "examples/training_data/new"
+  archive_dir: "examples/training_data/archive"
+  adapter_version_dir: "models"
+  eval_holdout_dir: "examples/eval_holdout"
+  # 0.2 = 20% old examples mixed in to prevent catastrophic forgetting
+  replay_ratio: 0.2
+  # Don't trigger training until this many new examples are queued
+  min_new_examples: 5

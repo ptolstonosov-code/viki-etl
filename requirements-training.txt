@@ -1,0 +1,24 @@
+# Dependencies for the GPU TRAINING host (Ubuntu 24.04 + RTX 5090).
+# Skips Ollama client and Gradio — those are only on the workstation.
+
+# HuggingFace stack
+transformers>=4.46.0
+peft>=0.13.0
+trl>=0.12.0
+datasets>=3.0.0
+accelerate>=1.0.0
+sentencepiece>=0.2.0
+tokenizers>=0.20.0
+safetensors>=0.4.0
+
+# GGUF export
+gguf>=0.10.0
+
+# Project plumbing
+sqlalchemy>=2.0.0
+pyyaml>=6.0.2
+click>=8.1.7
+rich>=13.9.0
+
+# NOTE: PyTorch with CUDA 12.4 must be installed BEFORE this file:
+#   pip install --index-url https://download.pytorch.org/whl/cu124 torch torchvision torchaudio

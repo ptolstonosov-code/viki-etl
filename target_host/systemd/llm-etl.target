@@ -1,0 +1,7 @@
+[Unit]
+Description=LLM ETL — full stack (API + viewer, LLM on-demand)
+Requires=llm-etl-api.service llm-etl-viewer.service
+After=llm-etl-api.service llm-etl-viewer.service
+
+[Install]
+WantedBy=multi-user.target

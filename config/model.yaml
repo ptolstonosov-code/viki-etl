@@ -1,0 +1,87 @@
+# ─────────────────────────────────────────────
+# Model configuration for LLM ETL system
+# ─────────────────────────────────────────────
+
+# ── Inference backend ──────────────────────────────────────────────────────────
+# "none"          = no LLM here, manual annotation only (workstation default)
+# "llama_server"  = HTTP client to a llama.cpp server (target device or GPU host)
+# "hf"            = HuggingFace Transformers, only on the GPU host post-fine-tune
+# "ollama"        = legacy, only if Ollama still installed somewhere
+inference_backend: "none"
+
+# ── llama.cpp HTTP server (recommended for production) ────────────────────────
+# Points to wherever llama-server is running (target ARM device OR GPU host).
+# Leave url empty if backend is "none".
+llama_server:
+  url: "http://localhost:8080"
+  # Stop tokens / parameters passed in every request
+  options:
+    temperature: 0.0
+    top_p: 1.0
+    n_predict: 4096
+    cache_prompt: true          # huge speedup on repeated system-prompt calls
+
+ollama:
+  # NOT used on this workstation — kept for backward-compat with the parser code.
+  # Real inference happens on the target device (Debian ARM, RK3566) via llama.cpp.
+  # On this workstation we don't run any LLM locally.
+  model: "qwen2.5:1.5b"
+  base_url: "http://localhost:11434"
+  options:
+    temperature: 0.0
+    top_p: 1.0
+    num_predict: 4096
+    num_ctx: 8192
+
+# ── Fine-tuned model ──────────────────────────────────────────────────────────
+# Target deployment device: Debian 11 ARM (RK3566, 4 GB RAM, 32 GB disk).
+# Constraints — under 1.5 GB on disk, under 2 GB RAM, run on 4×Cortex-A55 @ 2 GHz.
+# Inference engine: llama.cpp (compiled natively for ARM aarch64), quant Q4_K_M.
+hf:
+  # Base model for fine-tuning on the GPU host (RTX 5090).
+  # Qwen2.5-Coder-1.5B-Instruct: best Russian + JSON/XML support in this size class.
+  base_model_id: "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+  # Path to fine-tuned LoRA adapter (filled in by the training script)
+  adapter_path: "models/etl_lora_adapter"
+  load_in_4bit: false           # 1.5B is small enough for full bf16 training on 5090
+
+# ── Quantization for the target device ────────────────────────────────────────
+target:
+  device_arch: "linux-arm64"    # RK3566 = ARM64 (aarch64)
+  ram_gb: 4
+  disk_gb: 32
+  inference_engine: "llama.cpp"
+  gguf_quant: "Q4_K_M"          # ~1 GB on disk, ~1.5 GB RAM. Sweet spot.
+  llama_server_port: 8080
+  context_window: 4096          # keep modest to fit in RAM
+  # Path to saved LoRA adapter (set automatically after training)
+  adapter_path: "models/etl_lora_adapter"
+  # Merge adapter into base model for faster inference
+  merged_model_path: "models/etl_merged"
+  # Load in 4-bit for inference (saves VRAM)
+  load_in_4bit: true
+
+# ── System prompt ──────────────────────────────
+# {schema} placeholder is filled automatically from schema.yaml
+system_prompt: |
+  You are an expert data parser and ETL specialist.
+  Your task: analyze raw input data (any format), identify its structure,
+  and extract all records into the target database schema.
+
+  Target schema (PostgreSQL):
+  {schema}
+
+  Rules:
+  1. Detect the data format automatically (CSV, pipe-delimited, JSON, XML, fixed-width, custom, etc.)
+  2. Extract EVERY record present in the input
+  3. Map each field to the correct table and column name
+  4. Return ONLY a valid JSON array — no explanations, no markdown, just JSON
+  5. Missing or ambiguous fields → use null
+  6. Dates → ISO format YYYY-MM-DD
+  7. Numbers → unquoted numeric values
+
+  Response format:
+  [
+    {"table": "<table_name>", "data": {"column1": value1, "column2": value2}},
+    ...
+  ]

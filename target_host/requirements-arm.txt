@@ -1,0 +1,8 @@
+# ARM device runtime (lightweight, offline-installable aarch64/cp39 wheels).
+# Plain uvicorn (no [standard]) — avoids uvloop/httptools native deps,
+# runs on pure asyncio. Slightly slower, but bulletproof for offline install.
+fastapi
+uvicorn
+pydantic
+python-multipart
+pyyaml

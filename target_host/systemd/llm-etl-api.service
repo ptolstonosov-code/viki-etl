@@ -1,0 +1,26 @@
+[Unit]
+Description=LLM ETL — API (parsers, always-on)
+After=network.target
+PartOf=llm-etl.target
+
+[Service]
+Type=simple
+User=llm-etl
+Group=llm-etl
+WorkingDirectory=/opt/llm-etl
+Environment=LLM_ETL_ROOT=/opt/llm-etl
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/llm-etl/.venv/bin/python -m uvicorn target_host.api_service:app \
+    --host 0.0.0.0 --port 8080 --workers 1
+Restart=on-failure
+RestartSec=5s
+
+# Memory guard — kill if RSS exceeds 500 MB (API alone shouldn't need more)
+MemoryMax=500M
+MemorySwapMax=0
+
+# Limit it to one CPU when LLM is running — leave cycles for inference
+CPUQuota=300%
+
+[Install]
+WantedBy=multi-user.target
