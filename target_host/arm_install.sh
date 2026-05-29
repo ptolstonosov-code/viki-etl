@@ -110,11 +110,17 @@ else
     mkdir -p "$LLAMA_SRC"
     tar -xzf "$SRC/llama.cpp-source.tar.gz" -C "$LLAMA_SRC"
     cd "$LLAMA_SRC"
+    # BUILD_SHARED_LIBS=OFF — собираем САМОДОСТАТОЧНЫЙ бинарь. Иначе llama-server
+    # остаётся тонкой обёрткой (~15 КБ), которая при запуске ищет рядом
+    # libllama-server-impl.so / libggml*.so, а после удаления build-папки их нет
+    # → "error while loading shared libraries" (exit 127). Со статикой код вшит.
+    # LTO=OFF и parallel=2 — чтобы линковка не упёрлась в память на 4-ГБ ARM.
     cmake -B build \
         -DCMAKE_BUILD_TYPE=Release \
-        -DGGML_NATIVE=ON -DGGML_LTO=ON \
+        -DBUILD_SHARED_LIBS=OFF \
+        -DGGML_NATIVE=ON -DGGML_LTO=OFF \
         -DLLAMA_CURL=OFF
-    cmake --build build --config Release --parallel "$(nproc)" --target llama-server llama-cli llama-quantize
+    cmake --build build --config Release --parallel 2 --target llama-server llama-cli llama-quantize
     install -m 0755 build/bin/llama-server "$INSTALL/llama-server"
     install -m 0755 build/bin/llama-cli    "$INSTALL/llama-cli"
     cd /tmp ; rm -rf "$LLAMA_SRC"
