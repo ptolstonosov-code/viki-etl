@@ -71,10 +71,16 @@ def build_dataset(examples_dir: str | Path | None = None) -> "Dataset":
     """
     from datasets import Dataset  # heavy import — only when training
 
-    model_cfg = _load_yaml("model.yaml")
     training_cfg = _load_yaml("training.yaml")
-    schema_block = _load_schema_for_prompt()
-    system_prompt = model_cfg["system_prompt"].replace("{schema}", schema_block)
+    # Use the compact canonical prompt (identical to inference on the ARM device)
+    # so train/inference stay consistent AND fast on weak CPU (~700 tokens vs ~7000).
+    sp_path = ROOT / "system_prompt.txt"
+    if sp_path.exists():
+        system_prompt = sp_path.read_text(encoding="utf-8")
+    else:
+        model_cfg = _load_yaml("model.yaml")
+        schema_block = _load_schema_for_prompt()
+        system_prompt = model_cfg["system_prompt"].replace("{schema}", schema_block)
 
     examples_dir = examples_dir or training_cfg["dataset"]["examples_dir"]
     raw_examples = load_examples(examples_dir)
