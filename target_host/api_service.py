@@ -21,6 +21,7 @@ import logging
 import os
 import sys
 from pathlib import Path
+from urllib.parse import unquote
 
 from fastapi import FastAPI, HTTPException, Request, UploadFile, File
 from fastapi.responses import JSONResponse
@@ -31,6 +32,7 @@ sys.path.insert(0, str(ROOT))
 
 from core.autoparser.orchestrator import AutoparserOrchestrator  # noqa: E402
 from core.autoparser.llm_service import LLMService  # noqa: E402
+from core.autoparser import data_healer  # noqa: E402
 from core.parsers import discover_learned, list_parsers  # noqa: E402
 from core.db_writer_lite import SQLiteWriter, init_db  # noqa: E402
 
@@ -63,8 +65,14 @@ llm = LLMService(
     model=ROOT / "models" / "active.gguf",
     port=8080 + 100,        # 8180 — LLM service is on a different port
     threads=int(os.environ.get("LLM_THREADS", "4")),
-    idle_timeout=int(os.environ.get("LLM_IDLE_TIMEOUT", "60")),
-    use_systemd=True,
+    ctx_size=int(os.environ.get("LLM_CTX", "4096")),
+    # Must exceed a single inference (slow ARM CPU: labeling ~13 min) — otherwise the
+    # idle watcher terminates llama-server mid-request (_last_used is stale during the
+    # blocking call). 1800s comfortably covers any one call; frees RAM after real idle.
+    idle_timeout=int(os.environ.get("LLM_IDLE_TIMEOUT", "1800")),
+    # api runs as non-root 'llm-etl' → spawn llama-server directly instead of via
+    # systemctl (which needs root/polkit). Makes on-demand LLM fully autonomous.
+    use_systemd=False,
     systemd_unit="llm-etl-llm.service",
 )
 
@@ -118,6 +126,8 @@ async def ingest_raw(request: Request):
     if not raw:
         raise HTTPException(400, "empty body")
     filename = request.headers.get("X-Filename")
+    if filename:
+        filename = unquote(filename)   # viewer percent-encodes (headers are latin-1 only)
     try:
         result = orchestrator.ingest_file(raw, filename=filename)
         return _persist(result)
@@ -140,6 +150,7 @@ async def status():
         "db_path": str(DB_PATH),
         "samples_total": len(list((DATA_DIR / "samples").glob("*/meta.json"))),
         "row_counts": db.row_counts(),
+        "held": db.held_summary(),
     }
 
 
@@ -154,6 +165,18 @@ async def trigger_tick():
     """Manually trigger autoparser maintenance (normally runs on timer)."""
     actions = orchestrator.tick()
     return {"actions": actions}
+
+
+@app.post("/heal-data")
+async def heal_data():
+    """Wake the LLM to triage held (quarantined) records: it curates the value
+    allowlist (allow valid values / map variants), then held rows are retried.
+    The VALUE-level half of the self-learning loop."""
+    try:
+        return data_healer.heal(db, llm)
+    except Exception as e:
+        logger.exception("heal-data failed")
+        raise HTTPException(500, str(e))
 
 
 @app.get("/health")

@@ -1,0 +1,7 @@
+{
+  "_note": "App-level validation for open-domain enum columns. The LLM (data_healer) curates this when real data brings new values. Keyed by '<table>.<column>'. 'allow' = values accepted as-is; 'map' = raw value -> allowed value (substituted on write).",
+  "catalog_product.unit": {
+    "allow_any": true,
+    "_comment": "ОКЕИ — открытый домен (сотни валидных кодов). Принимаем любой код как есть, без gatekeeping. Механизм allow/map/healer остаётся для колонок с реально замкнутым набором значений."
+  }
+}

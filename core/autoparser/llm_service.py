@@ -175,7 +175,7 @@ class LLMService:
             f"{self.url}/v1/chat/completions",
             data=body, headers={"Content-Type": "application/json"}, method="POST",
         )
-        with urllib.request.urlopen(req, timeout=600) as r:
+        with urllib.request.urlopen(req, timeout=1800) as r:
             resp = json.loads(r.read().decode("utf-8"))
         self._last_used = time.time()
         return resp["choices"][0]["message"]["content"]

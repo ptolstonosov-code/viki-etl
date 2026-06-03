@@ -14,6 +14,7 @@ Stats are returned by write(): inserted, skipped, errors.
 
 from __future__ import annotations
 
+import json
 import logging
 import sqlite3
 import threading
@@ -114,10 +115,44 @@ class SQLiteWriter:
     }
     _DOC_TABLES_PREFIX = ("doc_",)
 
-    def __init__(self, db_path: str | Path):
+    def __init__(self, db_path: str | Path, rules_path: str | Path | None = None,
+                 quarantine_dir: str | Path | None = None):
         self.db_path = Path(db_path)
         self._lock = threading.Lock()
         self._table_columns: dict[str, set[str]] = {}
+        # App-level validation for open-domain enum columns (LLM-curated).
+        # Use the un-resolved path so symlinked data/ -> /dev/shm keeps config on disk.
+        self.rules_path = Path(rules_path) if rules_path else (
+            self.db_path.parent.parent / "config" / "value_allowlists.json")
+        self.quarantine_dir = Path(quarantine_dir) if quarantine_dir else (
+            self.db_path.parent / "data_quarantine")
+        self._allow: dict[str, set[str]] = {}
+        self._map: dict[str, dict[str, str]] = {}
+        self._accept_any: set[str] = set()
+        self.reload_rules()
+
+    def reload_rules(self) -> None:
+        """(Re)load the LLM-curated allow/map rules from value_allowlists.json."""
+        self._allow, self._map, self._accept_any = {}, {}, set()
+        try:
+            data = json.loads(self.rules_path.read_text(encoding="utf-8"))
+        except (FileNotFoundError, json.JSONDecodeError):
+            return
+        for key, spec in data.items():
+            if key.startswith("_") or not isinstance(spec, dict):
+                continue
+            if spec.get("allow_any"):
+                self._accept_any.add(key)   # open-domain column: accept any value
+            self._allow[key] = {str(v) for v in (spec.get("allow") or [])}
+            self._map[key] = {str(k): str(v) for k, v in (spec.get("map") or {}).items()}
+
+    def _quarantine(self, table: str, column: str, value: str, data: dict) -> None:
+        """Hold a record whose value isn't allowed yet — for LLM healing, not lost."""
+        self.quarantine_dir.mkdir(parents=True, exist_ok=True)
+        line = json.dumps({"table": table, "column": column, "value": value, "data": data},
+                          ensure_ascii=False)
+        with open(self.quarantine_dir / "rejects.jsonl", "a", encoding="utf-8") as f:
+            f.write(line + "\n")
 
     def _conn(self) -> sqlite3.Connection:
         conn = sqlite3.connect(str(self.db_path), timeout=15)
@@ -145,13 +180,14 @@ class SQLiteWriter:
         Write a batch of records. Returns
             {"inserted": int, "skipped": int, "errors": list[str]}.
         """
-        stats: dict[str, Any] = {"inserted": 0, "skipped": 0, "errors": []}
+        stats: dict[str, Any] = {"inserted": 0, "skipped": 0, "held": 0, "errors": []}
         if not records:
             return stats
 
         with self._lock:
             conn = self._conn()
             try:
+                pending = 0
                 for rec in records:
                     table = rec.get("table") or ""
                     data = rec.get("data") or {}
@@ -161,6 +197,28 @@ class SQLiteWriter:
                     cols = self._columns_of(conn, table)
                     if not cols:
                         stats["errors"].append(f"unknown table: {table}")
+                        continue
+
+                    # App-level enum validation (LLM-curated allowlists). An unknown
+                    # value is HELD in the data-quarantine for LLM healing — not
+                    # inserted, not lost. A mapped value is substituted in place.
+                    held = False
+                    for col in list(data.keys()):
+                        key = f"{table}.{col}"
+                        if data[col] is None or key in self._accept_any:
+                            continue  # open-domain column → no gatekeeping
+                        if key not in self._allow:
+                            continue
+                        sval = str(data[col])
+                        mapped = self._map.get(key, {}).get(sval)
+                        if mapped is not None:
+                            data[col] = mapped
+                        elif sval not in self._allow[key]:
+                            self._quarantine(table, col, sval, data)
+                            stats["held"] += 1
+                            held = True
+                            break
+                    if held:
                         continue
 
                     # Filter only known columns, coerce booleans → int
@@ -183,16 +241,66 @@ class SQLiteWriter:
                     try:
                         conn.execute(sql, list(clean.values()))
                         stats["inserted"] += 1
+                        pending += 1
                     except sqlite3.IntegrityError as e:
                         stats["skipped"] += 1
+                        pending += 1
                         if "UNIQUE" not in str(e) and "PRIMARY KEY" not in str(e):
                             stats["errors"].append(f"{table}: {e}")
                     except sqlite3.Error as e:
                         stats["errors"].append(f"{table}: {e}")
+
+                    # Commit in chunks so a huge ingest never builds ONE giant
+                    # transaction. A 6 MB / 1200-item file once hard-locked the
+                    # box on the single final fsync — batching lets a low-RAM
+                    # device and a weak eMMC drain I/O between chunks.
+                    if pending >= 500:
+                        conn.commit()
+                        pending = 0
                 conn.commit()
             finally:
                 conn.close()
         return stats
+
+    def held_summary(self) -> dict:
+        """Quarantined (held) records grouped by '<table>.<column>' → {values:{v:count}, count}."""
+        path = self.quarantine_dir / "rejects.jsonl"
+        out: dict[str, dict] = {}
+        if not path.exists():
+            return out
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            try:
+                r = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            key = f"{r.get('table')}.{r.get('column')}"
+            slot = out.setdefault(key, {"values": {}, "count": 0})
+            v = str(r.get("value"))
+            slot["values"][v] = slot["values"].get(v, 0) + 1
+            slot["count"] += 1
+        return out
+
+    def retry_held(self) -> dict:
+        """Re-attempt held records after rules changed. Now-allowed rows insert;
+        still-unknown rows get re-quarantined by write()."""
+        self.reload_rules()
+        path = self.quarantine_dir / "rejects.jsonl"
+        if not path.exists():
+            return {"retried": 0, "inserted": 0, "still_held": 0}
+        records = []
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            try:
+                r = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            records.append({"table": r.get("table"), "data": r.get("data") or {}})
+        path.unlink()  # cleared; write() re-quarantines any still-unknown
+        stats = self.write(records)
+        return {"retried": len(records), "inserted": stats["inserted"], "still_held": stats["held"]}
 
     def row_counts(self) -> dict[str, int]:
         """Return number of rows per table."""

@@ -27,7 +27,7 @@ CREATE TABLE catalog_product (
   type        TEXT CHECK (type IN ('default','dish','service')), -- Тип товара
   tax_rate    TEXT NOT NULL CHECK (tax_rate IN ('NDS_NO_TAX','NDS_5','NDS_7','NDS_10','NDS_5_105','NDS_7_107','NDS_10_110','NDS_22','NDS_22_122')),  -- Ставка НДС
   group_id    TEXT NOT NULL,                                     -- Группа товара
-  unit        TEXT NOT NULL CHECK (unit IN ('796','163','166','168','004','005','006','051','053','055','111','112','113','245','233','359','356','355','354','256','257','2553','2554')),  -- ОКЕИ
+  unit        TEXT NOT NULL,  -- ОКЕИ. Валидация — в app-слое (config/value_allowlists.json), список ведёт ЛЛМ (data_healer)
   created_at  TEXT DEFAULT (datetime('now')),
   archived_at TEXT,                                              -- NULL = активен
   excise      INTEGER DEFAULT 0,                                 -- Подакцизный товар

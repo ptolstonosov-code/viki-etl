@@ -21,6 +21,7 @@ import os
 import sqlite3
 import sys
 import urllib.request
+from urllib.parse import quote
 from html import escape
 from pathlib import Path
 
@@ -303,7 +304,7 @@ async def upload_file(file: UploadFile = File(...)):
         f"{API_URL}/ingest/raw",
         data=raw,
         headers={"Content-Type": "application/octet-stream",
-                 "X-Filename": file.filename or "upload.dat"},
+                 "X-Filename": quote(file.filename or "upload.dat")},
         method="POST",
     )
     try:

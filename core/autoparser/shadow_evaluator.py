@@ -36,13 +36,21 @@ def _records_to_key_set(records: list[dict]) -> set:
             continue
         table = r.get("table", "")
         data = r.get("data") or {}
-        # Compare only the most "stable" fields: id, name, code
-        key_fields = ("id", "name", "barcode", "article", "variant_id", "product_id")
+        # Match on the real source-derived business data: product name, barcode,
+        # article, variant display-name. ALL internal ids (id / variant_id /
+        # product_id) are synthetic UUIDs the LLM mints inconsistently per-run —
+        # on some samples it copies the source id, on others it invents one — so a
+        # deterministic parser cannot reproduce them and scoring against them would
+        # unfairly fail a correct parser. Identity = business values; fall back to
+        # `id` only when a record carries no business value of its own.
+        business_keys = ("name", "barcode", "article", "display_name")
         sig = tuple(sorted(
             (k, json.dumps(v, ensure_ascii=False))
             for k, v in data.items()
-            if k in key_fields and v is not None
+            if k in business_keys and v is not None
         ))
+        if not sig and data.get("id") is not None:
+            sig = (("id", json.dumps(data["id"], ensure_ascii=False)),)
         s.add((table, sig))
     return s
 
