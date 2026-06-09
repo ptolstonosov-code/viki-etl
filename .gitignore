@@ -54,3 +54,4 @@ examples/real_1c/*.xml
 *.key
 *.pem
 credentials*.json
+INFRA.md
